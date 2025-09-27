@@ -91,3 +91,18 @@
 - Give it time to connect, it'll take a few minutes to an hour before the certificate's status changes from pending to success.
 
 ### 6. Create Application Load Balance and Web Application Firewall
+
+- Go to EC2 and got to load balancers on the left side
+- Create the Application Load Balancer specifically.
+- Pick internet facing, select the vpc, and select both of the availability zones.
+- For the "Listeners and Rules" portion set Protocol:Port to "HTTPS:443", set "Default Action" to forward to a group target.
+- The group target should be the GitLab VM
+- Within the port-target page go to tab "health check" hit the edit tag and change it to "/users/sign_in"
+
+### 7. Add the CNAME to Registrar to Connect to Application Load Balancer
+
+- Go to the load balancer, port-alb, and copy the DNS name.
+- Go to namecheap and add under the AdvancedDNS and create another CNAME entry
+- The host will be either www or project (example for: www.example.com or project.example.com)
+- Then the DNS name will be the CNAME value
+- You'll want to wait a few hours for all computers to be able to recognize it, but you can check dns checker sites (www.dnschecker.org) after 10 minutes to verify if it works.
