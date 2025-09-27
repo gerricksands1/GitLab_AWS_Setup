@@ -106,3 +106,19 @@
 - The host will be either www or project (example for: www.example.com or project.example.com)
 - Then the DNS name will be the CNAME value
 - You'll want to wait a few hours for all computers to be able to recognize it, but you can check dns checker sites (www.dnschecker.org) after 10 minutes to verify if it works.
+
+### 8. Configure Gitlab to Listen to HTTPS
+
+- We're going to use Sessions Manager to access our VM
+- Key command "sudo vim /etc/gitlab/gitlab.rb"
+- This is what we need to edit:
+```
+gitlab_rails['trusted_proxies'] = ["10.0.0.0/16"]
+nginx['listen_port'] = 80
+nginx['listen_https'] = false
+nginx['real_ip_trusted_addresses'] = ["10.0.0.0/16"]
+nginx['real_ip_header'] = 'X-Forwarded-For'
+nginx['real_ip_recursive'] = "on"
+```
+- Make sure that "External_URL" is set to what your address should be: https://project.example.com or what you're setting it to.
+- This should allow the ALB to access the GitLab app and trusted to redirect with ssl traffic.
